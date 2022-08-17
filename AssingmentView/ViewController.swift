@@ -20,7 +20,7 @@ class ViewController: UIViewController, UICollectionViewDelegate {
         assignmentView.topAnchor.constraint(equalTo: view.topAnchor,constant: 40.0).isActive = true
         assignmentView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         assignmentView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        assignmentView.heightAnchor.constraint(equalToConstant: 200.0 ).isActive = true
+        assignmentView.heightAnchor.constraint(equalToConstant: 240 ).isActive = true
         getAndPassImageURLsToAssignmentView(source: self.source)
        
     }

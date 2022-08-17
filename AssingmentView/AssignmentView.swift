@@ -11,21 +11,24 @@ import Kingfisher
 
 class AssignmentView: UICollectionView {
     
-    var imageURLs:[String] = []
-    var readyImages: [UIImageView] = []
-    var loadTimes:[String:Double] = [:]
+    let endPointURL = "https://httpbin.org/post"
+    
+    lazy var imageURLs:[String] = []
+    lazy var readyImages: [UIImageView] = []
+    lazy var loadStartMoments:[String:Double] = [:]
     
     init(){
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        layout.itemSize = CGSize(width: 110, height: 90)
+        layout.itemSize = CGSize(width: 110, height: 200)
+        layout.minimumInteritemSpacing = CGFloat(102)
         layout.scrollDirection = .horizontal
         super.init(frame: CGRect.zero, collectionViewLayout: layout)
        
         self.dataSource = self
         self.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         
-        self.backgroundColor = UIColor.red
+        self.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
     }
     
     required init?(coder: NSCoder) {
@@ -49,7 +52,7 @@ extension AssignmentView {
                 let url = URL(string: imageUrl)
                 customImageView.kf.indicatorType = .activity
                 
-                self.loadTimes[imageUrl] = Date().timeIntervalSince1970 //save the time to calculate the load time later.
+                self.loadStartMoments[imageUrl] = Date().timeIntervalSince1970 //save the time to calculate the load time later.
                 customImageView.kf.setImage(
                     with: url,
                     placeholder: UIImage(systemName: "loading" ),
@@ -60,7 +63,7 @@ extension AssignmentView {
                     ]) {  [weak self] result in
                     switch result {
                     case .success(let value):
-                        self?.logTimeDifferenceForImage(from: self?.loadTimes[value.source.url?.absoluteString ?? ""]! ?? 0.0, to: Date().timeIntervalSince1970,identifier:value.source.url?.absoluteString ?? "")
+                        self?.logTimeDifferenceForImage(from: self?.loadStartMoments[value.source.url?.absoluteString ?? ""]! ?? 0.0, to: Date().timeIntervalSince1970,identifier:value.source.url?.absoluteString ?? "")
                         self?.readyImages.append(customImageView)
                         self!.reloadData()
                     case .failure(let error):
@@ -72,8 +75,32 @@ extension AssignmentView {
     }
     
     private func logTimeDifferenceForImage(from: TimeInterval, to: TimeInterval, identifier: String) {
-        let timeDifference = to - from
+        let timeDifference = (to - from)
         print("Task done for: \(identifier) \n - Load Time was: \(timeDifference) seconds \n")
+        passLoadTimeDataToEndPoint(to: self.endPointURL, identifier: identifier, loadTime: timeDifference)
+    }
+}
+
+extension AssignmentView {
+    private func passLoadTimeDataToEndPoint(to:String, identifier:String, loadTime: Double){
+        let json = ["loadTime":[identifier:loadTime]]
+        let jsonData = try? JSONSerialization.data(withJSONObject: json)
+  
+        let url = URL(string: endPointURL)!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = jsonData
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print(error?.localizedDescription ?? "No data")
+                return
+            }
+            let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
+            if let responseJSON = responseJSON as? [String: Any] {
+                print(responseJSON)
+            }
+        }
+        task.resume()
     }
 }
 
@@ -101,9 +128,9 @@ extension AssignmentView: UICollectionViewDataSource {
 
 /**
  #my notes
- * you need to do parse json operations in the demo page
+ *  you need to do parse json operations in the demo page
  * you will give list of url to AssignmentView with a custom method in Demo Page.( AssignmentView.setImages(url: "url.com")
- * one private or internal method to add a log for timer load times.
+ * one private  method to add a log for load times.
  
  *save the date at the beginning of request and at the result calculate the difference with the correct(you may use dictionary for this purpose) saved date then print it. 
  */
