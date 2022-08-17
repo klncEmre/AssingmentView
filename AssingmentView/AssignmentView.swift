@@ -43,26 +43,29 @@ extension AssignmentView {
 extension AssignmentView {
     private func getImagesFromInternet() {
         for imageUrl in imageURLs {
-            let customImageView = UIImageView()
-            let url = URL(string: imageUrl)
-            customImageView.kf.indicatorType = .activity
-            //save the date here
-            loadTimes[imageUrl] = Date().timeIntervalSince1970
-            customImageView.kf.setImage(
-                with: url,
-                placeholder: UIImage(systemName: "loading" ),
-                options: [
-                    .scaleFactor(UIScreen.main.scale),
-                    .transition(.fade(1)),
-                    .cacheOriginalImage
-                ]) {  [weak self] result in
-                switch result {
-                case .success(let value):
-                    self?.logTimeDifferenceForImage(from: self?.loadTimes[value.source.url?.absoluteString ?? ""]! ?? 0.0, to: Date().timeIntervalSince1970,identifier:value.source.url?.absoluteString ?? "")
-                    self?.readyImages.append(customImageView)
-                    self!.reloadData()
-                case .failure(let error):
-                    print("Job failed: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+               // UI work here
+                let customImageView = UIImageView()
+                let url = URL(string: imageUrl)
+                customImageView.kf.indicatorType = .activity
+                
+                self.loadTimes[imageUrl] = Date().timeIntervalSince1970 //save the time to calculate the load time later.
+                customImageView.kf.setImage(
+                    with: url,
+                    placeholder: UIImage(systemName: "loading" ),
+                    options: [
+                        .scaleFactor(UIScreen.main.scale),
+                        .transition(.fade(1)),
+                        .cacheOriginalImage,
+                    ]) {  [weak self] result in
+                    switch result {
+                    case .success(let value):
+                        self?.logTimeDifferenceForImage(from: self?.loadTimes[value.source.url?.absoluteString ?? ""]! ?? 0.0, to: Date().timeIntervalSince1970,identifier:value.source.url?.absoluteString ?? "")
+                        self?.readyImages.append(customImageView)
+                        self!.reloadData()
+                    case .failure(let error):
+                        print("Job failed: \(error.localizedDescription)")
+                    }
                 }
             }
         }
@@ -73,9 +76,6 @@ extension AssignmentView {
         print("Task done for: \(identifier) \n - Load Time was: \(timeDifference) seconds \n")
     }
 }
-
-
-
 
 extension AssignmentView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
