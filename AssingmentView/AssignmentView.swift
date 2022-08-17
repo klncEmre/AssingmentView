@@ -8,18 +8,20 @@
 import Foundation
 import UIKit
 import Kingfisher
+
 class AssignmentView: UICollectionView {
+    
     var imageURLs:[String] = []
     var readyImages: [UIImageView] = []
+    var loadTimes:[String:Double] = [:]
     
     init(){
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
-        layout.itemSize = CGSize(width: 110, height: 110)
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: 110, height: 90)
         layout.scrollDirection = .horizontal
-        
         super.init(frame: CGRect.zero, collectionViewLayout: layout)
-        
+       
         self.dataSource = self
         self.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         
@@ -31,37 +33,48 @@ class AssignmentView: UICollectionView {
     }
 }
 
-extension AssignmentView {
+extension AssignmentView { 
     public func setImages(images:[String]){
         self.imageURLs = images
-//        test
-        let customImageView = UIImageView()
-        let url = URL(string: "https://db62cod6cnasq.cloudfront.net/user-media/0/image4-5mb.png")
-        customImageView.kf.indicatorType = .activity
-        customImageView.kf.setImage(
-            with: url,
-            placeholder: UIImage(systemName: "loading" ),
-            options: [
-                .scaleFactor(UIScreen.main.scale),
-                .transition(.fade(1)),
-                .cacheOriginalImage
-            ])
-        {  [weak self]
-            result in
-            switch result {
-            case .success(let value):
-                self?.readyImages.append(customImageView)
-                self!.reloadData()
-                
-                print("Task done for: \(value.source.url?.absoluteString ?? "")")
-            case .failure(let error):
-                print("Job failed: \(error.localizedDescription)")
-            }
-        }
-        //test
-        
+        getImagesFromInternet()
     }
 }
+
+extension AssignmentView {
+    private func getImagesFromInternet() {
+        for imageUrl in imageURLs {
+            let customImageView = UIImageView()
+            let url = URL(string: imageUrl)
+            customImageView.kf.indicatorType = .activity
+            //save the date here
+            loadTimes[imageUrl] = Date().timeIntervalSince1970
+            customImageView.kf.setImage(
+                with: url,
+                placeholder: UIImage(systemName: "loading" ),
+                options: [
+                    .scaleFactor(UIScreen.main.scale),
+                    .transition(.fade(1)),
+                    .cacheOriginalImage
+                ]) {  [weak self] result in
+                switch result {
+                case .success(let value):
+                    self?.logTimeDifferenceForImage(from: self?.loadTimes[value.source.url?.absoluteString ?? ""]! ?? 0.0, to: Date().timeIntervalSince1970,identifier:value.source.url?.absoluteString ?? "")
+                    self?.readyImages.append(customImageView)
+                    self!.reloadData()
+                case .failure(let error):
+                    print("Job failed: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
+    private func logTimeDifferenceForImage(from: TimeInterval, to: TimeInterval, identifier: String) {
+        let timeDifference = to - from
+        print("Task done for: \(identifier) \n - Load Time was: \(timeDifference) seconds \n")
+    }
+}
+
+
 
 
 extension AssignmentView: UICollectionViewDataSource {
@@ -85,9 +98,13 @@ extension AssignmentView: UICollectionViewDataSource {
     }
 }
 
+
 /**
  #my notes
  * you need to do parse json operations in the demo page
  * you will give list of url to AssignmentView with a custom method in Demo Page.( AssignmentView.setImages(url: "url.com")
  * one private or internal method to add a log for timer load times.
+ 
+ *save the date at the beginning of request and at the result calculate the difference with the correct(you may use dictionary for this purpose) saved date then print it. 
  */
+

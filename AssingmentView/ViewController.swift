@@ -15,35 +15,36 @@ class ViewController: UIViewController, UICollectionViewDelegate {
         super.viewDidLoad()
         view.addSubview(assignmentView)
         assignmentView.translatesAutoresizingMaskIntoConstraints = false
-        assignmentView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        assignmentView.topAnchor.constraint(equalTo: view.topAnchor,constant: 40.0).isActive = true
         assignmentView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         assignmentView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         assignmentView.heightAnchor.constraint(equalToConstant: 200.0 ).isActive = true
-        assignmentView.setImages(images: ["https://db62cod6cnasq.cloudfront.net/user-media/0/image1-500kb.png"])
-        
-        // Do any additional setup after loading the view.
+        assignmentView.setImages(images: [
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image1-500kb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image2-500kb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image3-500kb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image4-500kb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image1-1mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image2-1mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image3-1mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image4-1mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image1-1_5mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image2-1_5mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image3-1_5mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image4-1_5mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image1-2mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image2-2mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image3-2mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image4-2mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image1-3mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image2-3mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image3-3mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image4-3mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image1-5mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image2-5mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image3-5mb.png",
+            "https://db62cod6cnasq.cloudfront.net/user-media/0/image4-5mb.png"
+        ])
     }
 }
 
-//imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-//        imageView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-//        let url = URL(string: "https://db62cod6cnasq.cloudfront.net/user-media/0/image4-5mb.png")
-//        imageView.kf.indicatorType = .activity
-//        imageView.kf.setImage(
-//            with: url,
-//            placeholder: UIImage(systemName: "loading" ),
-//            options: [
-//                .scaleFactor(UIScreen.main.scale),
-//                .transition(.fade(1)),
-//                .cacheOriginalImage
-//            ])
-//        {
-//            result in
-//            switch result {
-//            case .success(let value):
-//                print("Task done for: \(value.source.url?.absoluteString ?? "")")
-//            case .failure(let error):
-//                print("Job failed: \(error.localizedDescription)")
-//            }
-//        }
