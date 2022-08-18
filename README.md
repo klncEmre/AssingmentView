@@ -14,7 +14,7 @@ AssignmentView only requires  [KingFisher](https://github.com/onevcat/Kingfisher
 
 Firstly, get the AssignmentView file to your project.
 
-Create a instance from AsignmentView
+Create an instance from AsignmentView
 ```sh
 let assignmentView = AssignmentView()
 ```
@@ -38,3 +38,28 @@ Set the imageURLs with setImages method.
 assignmentView.setImages(images: yourImageURLs)
 ```
 That's it!
+
+## Features
+You can inspect the loading times info of every image. Loading time will printed to console after image is showing to the user. 
+You can change and send the loading time data to desired endpoint.
+```sh
+let endPointURL = "https://httpbin.org/post"
+```
+## Demo App
+You can check demo app code from [this page](https://github.com/klncEmre/AssingmentView/blob/main/AssingmentView/ViewController.swift) .
+If you change the source variable in demo app should show your images now.
+```sh
+ let source = "your-source-url"
+```
+Your json data should be like this for this demo app if you want to change the source. 
+```sh
+{
+    "data": {
+        "images": [
+            "https://image1",
+            "https://image2",
+        ]
+    }
+}
+```
+
