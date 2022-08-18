@@ -13,16 +13,18 @@ class ViewController: UIViewController, UICollectionViewDelegate {
     let assignmentView = AssignmentView()
     let source = "https://prod-storyly-media.s3.eu-west-1.amazonaws.com/sdk-test-scenarios/assignment.json"
     var imageURLs:[String] = []
+    
     override func viewDidLoad()  {
         super.viewDidLoad()
+        
         view.addSubview(assignmentView)
         assignmentView.translatesAutoresizingMaskIntoConstraints = false
         assignmentView.topAnchor.constraint(equalTo: view.topAnchor,constant: 40.0).isActive = true
         assignmentView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         assignmentView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         assignmentView.heightAnchor.constraint(equalToConstant: 240 ).isActive = true
+        
         getAndPassImageURLsToAssignmentView(source: self.source)
-       
     }
 }
 
@@ -34,8 +36,10 @@ extension ViewController {
               if let data = data {
                   do{
                       let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
-                      for urlOfImage in json?["data"]?["images"] as! [String]{
-                          imageURLs.append(urlOfImage)
+                      if let safeData = json?["data"]?["images"] as? [String] {
+                          for urlOfImage in safeData {
+                              imageURLs.append(urlOfImage)
+                          }
                       }
                       self.assignmentView.setImages(images: imageURLs)
                   }

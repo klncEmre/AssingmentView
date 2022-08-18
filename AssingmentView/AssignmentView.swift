@@ -63,9 +63,9 @@ extension AssignmentView {
                     ]) {  [weak self] result in
                     switch result {
                     case .success(let value):
-                        self?.logTimeDifferenceForImage(from: self?.loadStartMoments[value.source.url?.absoluteString ?? ""]! ?? 0.0, to: Date().timeIntervalSince1970,identifier:value.source.url?.absoluteString ?? "")
                         self?.readyImages.append(customImageView)
-                        self!.reloadData()
+                        self?.reloadData()
+                        self?.logTimeDifferenceForImage(from: self?.loadStartMoments[value.source.url?.absoluteString ?? ""] ?? 0.0, to: Date().timeIntervalSince1970,identifier:value.source.url?.absoluteString ?? "")
                     case .failure(let error):
                         print("Job failed: \(error.localizedDescription)")
                     }
@@ -77,30 +77,30 @@ extension AssignmentView {
     private func logTimeDifferenceForImage(from: TimeInterval, to: TimeInterval, identifier: String) {
         let timeDifference = (to - from)
         print("Task done for: \(identifier) \n - Load Time was: \(timeDifference) seconds \n")
-        passLoadTimeDataToEndPoint(to: self.endPointURL, identifier: identifier, loadTime: timeDifference)
+        passLoadTimeDataToEndPoint(identifier: identifier, loadTime: timeDifference)
     }
 }
 
 extension AssignmentView {
-    private func passLoadTimeDataToEndPoint(to:String, identifier:String, loadTime: Double){
+    private func passLoadTimeDataToEndPoint(identifier:String, loadTime: Double){
         let json = ["loadTime":[identifier:loadTime]]
         let jsonData = try? JSONSerialization.data(withJSONObject: json)
   
-        let url = URL(string: endPointURL)!
+        guard let url = URL(string: self.endPointURL) else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = jsonData
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
-                print(error?.localizedDescription ?? "No data")
+                print(error?.localizedDescription ?? "No data") //HANDLE ERROR HERE
                 return
             }
             let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
             if let responseJSON = responseJSON as? [String: Any] {
-                print(responseJSON)
+                print(responseJSON) //HANDLE DATA HERE
             }
-        }
-        task.resume()
+        }.resume()
     }
 }
 
