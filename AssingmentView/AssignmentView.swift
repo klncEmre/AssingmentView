@@ -21,7 +21,6 @@ class AssignmentView: UICollectionView {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         layout.itemSize = CGSize(width: 110, height: 200)
-        layout.minimumInteritemSpacing = CGFloat(102)
         layout.scrollDirection = .horizontal
         super.init(frame: CGRect.zero, collectionViewLayout: layout)
        
