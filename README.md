@@ -40,18 +40,20 @@ assignmentView.setImages(images: yourImageURLs)
 That's it!
 
 ## Features
-You can inspect the loading times info of every image. Loading time will printed to console after image is showing to the user. 
+You can inspect the loading time info of every image. Loading time will be printed to the console after image is showed to the user. 
 You can change and send the loading time data to desired endpoint.
 ```sh
 let endPointURL = "https://httpbin.org/post"
 ```
 ## Demo App
 You can check demo app code from [this page](https://github.com/klncEmre/AssingmentView/blob/main/AssingmentView/ViewController.swift) .
-If you change the source variable in demo app should show your images now.
+
+If you want to show your images in demo app, you should change the source variable to your source url.
 ```sh
  let source = "your-source-url"
 ```
-Your json data should be like this for this demo app if you want to change the source. 
+
+In order to change the source to another one, you need to have returned data as shown below. 
 ```sh
 {
     "data": {
