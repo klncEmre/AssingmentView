@@ -55,7 +55,7 @@ extension AssignmentView {
                 self.loadStartMoments[imageUrl] = Date().timeIntervalSince1970 //save the time to calculate the load time later.
                 customImageView.kf.setImage(
                     with: url,
-                    placeholder: UIImage(systemName: "loading" ),
+                    placeholder: UIImage(systemName: "circle.dotted" ),
                     options: [
                         .scaleFactor(UIScreen.main.scale),
                         .transition(.fade(1)),
