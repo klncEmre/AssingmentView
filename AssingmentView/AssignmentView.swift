@@ -11,11 +11,11 @@ import Kingfisher
 
 class AssignmentView: UICollectionView {
     
-    let endPointURL = "https://httpbin.org/post"
+    private let endPointURL = "https://httpbin.org/post"
     
-    lazy var imageURLs:[String] = []
-    lazy var readyImages: [UIImageView] = []
-    lazy var loadStartMoments:[String:Double] = [:]
+    private lazy var imageURLs:[String] = []
+    private lazy var readyImages: [UIImageView] = []
+    private lazy var loadStartMoments:[String:Double] = [:]
     
     init(){
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
