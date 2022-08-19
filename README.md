@@ -19,7 +19,7 @@ Create an instance from AsignmentView
 let assignmentView = AssignmentView()
 ```
 
-Now you can add it as subview and give the constraints.
+Now you can add it as subview and give the constraints. You don't have to give the constraints below. You can specify them according to your design. Its just an example.
 ```sh
     view.addSubview(assignmentView)
     assignmentView.translatesAutoresizingMaskIntoConstraints = false
