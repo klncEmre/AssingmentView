@@ -12,9 +12,14 @@ class ViewController: UIViewController, UICollectionViewDelegate {
     let imageView = UIImageView()
     let assignmentView = AssignmentView()
     let source = "https://prod-storyly-media.s3.eu-west-1.amazonaws.com/sdk-test-scenarios/assignment.json"
-    var imageURLs:[String] = []
+   
+    lazy var imageURLs: [String] = [] {
+        didSet {
+            assignmentView.setImages(images: imageURLs) //Data updated reload the collectionView
+        }
+    }
     
-    override func viewDidLoad()  {
+    override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(assignmentView)
@@ -30,7 +35,7 @@ class ViewController: UIViewController, UICollectionViewDelegate {
 
 extension ViewController {
     func getAndPassImageURLsToAssignmentView(source: String) {
-        var imageURLs: [String] = []
+        var localImageURLs: [String] = []
         if let url = URL(string: source) {
               URLSession.shared.dataTask(with: url) { data, response, error in
               if let data = data {
@@ -38,10 +43,10 @@ extension ViewController {
                       let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
                       if let safeData = json?["data"]?["images"] as? [String] {
                           for urlOfImage in safeData {
-                              imageURLs.append(urlOfImage)
+                              localImageURLs.append(urlOfImage)
                           }
+                          self.imageURLs = localImageURLs
                       }
-                      self.assignmentView.setImages(images: imageURLs)
                   }
                   catch let error{
                       print(error.localizedDescription)
