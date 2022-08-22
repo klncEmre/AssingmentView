@@ -13,9 +13,14 @@ class AssignmentView: UICollectionView {
     
     private let endPointURL = "https://httpbin.org/post"
     
-    private lazy var imageURLs:[String] = []
     private lazy var readyImages: [UIImageView] = []
     private lazy var loadStartMoments:[String:Double] = [:]
+
+    private lazy var imageURLs: [String] = [] {
+        didSet {
+            getImagesFromInternet() //Data updated reload the collectionView
+        }
+    }
     
     init(){
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -38,7 +43,6 @@ class AssignmentView: UICollectionView {
 extension AssignmentView { 
     public func setImages(images:[String]){
         self.imageURLs = images
-        getImagesFromInternet()
     }
 }
 
