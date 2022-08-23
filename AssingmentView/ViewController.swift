@@ -7,7 +7,7 @@
 
 import UIKit
 import Kingfisher
-class ViewController: UIViewController, UICollectionViewDelegate {
+class ViewController: UIViewController {
     
     let imageView = UIImageView()
     let assignmentView = AssignmentView()
@@ -39,7 +39,7 @@ extension ViewController {
         if let url = URL(string: source) {
               URLSession.shared.dataTask(with: url) { data, response, error in
               if let data = data {
-                  do{
+                  do {
                       let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:AnyObject]
                       if let safeData = json?["data"]?["images"] as? [String] {
                           for urlOfImage in safeData {
@@ -48,7 +48,7 @@ extension ViewController {
                           self.imageURLs = localImageURLs
                       }
                   }
-                  catch let error{
+                  catch let error {
                       print(error.localizedDescription)
                   }
                }
