@@ -13,9 +13,12 @@ class AssignmentView: UICollectionView {
     
     private let endPointURL = "https://httpbin.org/post"
     
-    private lazy var readyImages: [UIImageView] = []
     private lazy var loadStartMoments:[String:Double] = [:]
-
+    private lazy var readyImages: [UIImageView] = []{
+        didSet{
+            reloadData()
+        }
+    }
     private lazy var imageURLs: [String] = [] {
         didSet {
             getImagesFromInternet() //Data updated reload the collectionView
@@ -67,7 +70,6 @@ extension AssignmentView {
                     switch result {
                     case .success(let value):
                         self?.readyImages.append(customImageView)
-                        self?.reloadData()
                         self?.logTimeDifferenceForImage(from: self?.loadStartMoments[value.source.url?.absoluteString ?? ""] ?? 0.0, to: Date().timeIntervalSince1970,identifier:value.source.url?.absoluteString ?? "")
                     case .failure(let error):
                         print("Job failed: \(error.localizedDescription)")
